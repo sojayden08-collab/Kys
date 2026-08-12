@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyFlow — Study smarter, not longer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blue:#2563EB;
+    --blue-dark:#1D4ED8;
+    --green:#10B981;
+    --bg:#F8FAFC;
+    --card:#FFFFFF;
+    --ink:#0F172A;
+    --ink-soft:#5B6472;
+    --amber:#F59E0B;
+    --red:#EF4444;
+    --border:#E7EBF1;
+    --radius:20px;
+    --shadow: 0 1px 2px rgba(15,23,42,0.04), 0 8px 24px rgba(15,23,42,0.06);
+    --shadow-lg: 0 4px 8px rgba(15,23,42,0.04), 0 24px 48px rgba(37,99,235,0.12);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter', sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:'Poppins', sans-serif;}
+  a{text-decoration:none; color:inherit;}
+  img,svg{display:block;}
+  .wrap{max-width:1160px; margin:0 auto; padding:0 24px;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{outline:3px solid var(--blue); outline-offset:3px; border-radius:6px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(248,250,252,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:16px 24px; max-width:1160px; margin:0 auto;}
+  .logo{display:flex; align-items:center; gap:10px; font-family:'Poppins'; font-weight:700; font-size:1.15rem;}
+  .logo-mark{
+    width:34px; height:34px; border-radius:10px;
+    background:linear-gradient(135deg, var(--blue), var(--green));
+    position:relative;
+  }
+  .logo-mark::after{
+    content:"";
+    position:absolute; inset:9px;
+    border-radius:4px;
+    background:var(--card);
+    clip-path: polygon(0 100%, 0 40%, 30% 40%, 30% 70%, 55% 70%, 55% 10%, 100% 10%, 100% 100%);
+  }
+  .nav-links{display:flex; gap:32px; font-size:0.95rem; font-weight:500; color:var(--ink-soft);}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-cta{display:flex; align-items:center; gap:18px;}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 22px; border-radius:999px; font-weight:600; font-size:0.95rem;
+    border:none; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn-primary{background:var(--blue); color:#fff; box-shadow:0 8px 20px rgba(37,99,235,0.28);}
+  .btn-primary:hover{background:var(--blue-dark); transform:translateY(-1px);}
+  .btn-ghost{background:transparent; color:var(--ink); padding:12px 8px;}
+  .btn-ghost:hover{color:var(--blue);}
+  .menu-toggle{display:none; background:none; border:none; cursor:pointer;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:88px 0 60px; position:relative;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#EAF2FF; color:var(--blue-dark); font-weight:600; font-size:0.82rem;
+    padding:7px 14px; border-radius:999px; margin-bottom:22px;
+  }
+  .eyebrow-dot{width:7px; height:7px; border-radius:50%; background:var(--green);}
+  .hero h1{
+    font-size:3.4rem; line-height:1.06; letter-spacing:-0.02em; font-weight:700;
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:normal; color:var(--blue);
+    position:relative;
+  }
+  .hero p.lead{font-size:1.15rem; color:var(--ink-soft); max-width:480px; margin-bottom:32px;}
+  .hero-actions{display:flex; align-items:center; gap:20px; margin-bottom:36px;}
+  .hero-note{font-size:0.85rem; color:var(--ink-soft);}
+  .trust-row{display:flex; gap:28px; align-items:center; color:var(--ink-soft); font-size:0.85rem; font-weight:500;}
+  .trust-row span{display:flex; align-items:center; gap:8px;}
+  .trust-row svg{width:16px; height:16px; stroke:var(--green);}
+
+  /* Hero mock dashboard — signature element */
+  .mock-wrap{position:relative;}
+  .mock-card{
+    background:var(--card); border-radius:24px; box-shadow:var(--shadow-lg);
+    padding:26px; border:1px solid var(--border);
+    transform: rotate(-1.2deg);
+  }
+  .mock-topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
+  .mock-greet{font-family:'Poppins'; font-weight:600; font-size:1.05rem;}
+  .mock-avatar{width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#93C5FD,#6EE7B7);}
+  .mock-alert{
+    display:flex; gap:12px; align-items:flex-start;
+    background:#FFF7ED; border:1px solid #FDE7C7; border-radius:16px; padding:14px 16px; margin-bottom:14px;
+  }
+  .mock-alert .dot{width:8px; height:8px; border-radius:50%; background:var(--amber); margin-top:6px; flex-shrink:0;}
+  .mock-alert strong{display:block; font-size:0.92rem; margin-bottom:2px;}
+  .mock-alert span{font-size:0.82rem; color:var(--ink-soft);}
+  .mock-suggest{
+    background:#ECFDF5; border:1px solid #BBF3DD; border-radius:16px; padding:16px; margin-bottom:16px;
+  }
+  .mock-suggest .tag{font-size:0.72rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color:var(--green); margin-bottom:6px; display:block;}
+  .mock-suggest .task{font-weight:600; font-size:0.95rem; margin-bottom:10px;}
+  .mock-progress-track{height:8px; border-radius:99px; background:#D6F4E7; overflow:hidden;}
+  .mock-progress-fill{height:100%; width:62%; background:var(--green); border-radius:99px;}
+  .mock-progress-label{display:flex; justify-content:space-between; font-size:0.75rem; color:var(--ink-soft); margin-top:6px;}
+  .mock-tasks{display:flex; flex-direction:column; gap:10px;}
+  .mock-task{display:flex; align-items:center; gap:10px; font-size:0.9rem; color:var(--ink);}
+  .mock-task .box{width:18px; height:18px; border-radius:6px; border:1.5px solid #CBD5E1; flex-shrink:0;}
+  .mock-task .box.done{background:var(--blue); border-color:var(--blue); position:relative;}
+  .mock-task.strike{color:var(--ink-soft); text-decoration:line-through;}
+  .float-chip{
+    position:absolute; background:var(--card); border-radius:14px; box-shadow:var(--shadow);
+    padding:10px 14px; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:8px;
+    border:1px solid var(--border);
+  }
+  .float-chip.streak{top:-18px; right:-6px; color:var(--amber);}
+  .float-chip.streak .flame{width:16px; height:16px; background:var(--amber); border-radius:50% 50% 50% 0; transform:rotate(45deg);}
+  .float-chip.quiz{bottom:-20px; left:-24px; color:var(--blue-dark);}
+
+  /* ---------- SECTION SHELLS ---------- */
+  section{padding:100px 0;}
+  .section-head{max-width:600px; margin:0 auto 56px; text-align:center;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:2.3rem; letter-spacing:-0.01em; margin-bottom:14px; font-weight:700;}
+  .section-head p{color:var(--ink-soft); font-size:1.05rem;}
+
+  /* ---------- PROBLEM ---------- */
+  .problem{background:var(--card); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+  .problem-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  .compare{display:flex; flex-direction:column; gap:14px;}
+  .compare-row{
+    display:flex; align-items:center; gap:14px; padding:16px 18px; border-radius:14px; border:1px solid var(--border);
+  }
+  .compare-row.bad{background:#FEF2F2;}
+  .compare-row.good{background:#ECFDF5;}
+  .compare-icon{width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+  .compare-row.bad .compare-icon{background:#FCA5A5; color:#7F1D1D;}
+  .compare-row.good .compare-icon{background:#6EE7B7; color:#064E3B;}
+  .compare-row div p{font-weight:600; font-size:0.95rem;}
+  .compare-row div span{font-size:0.83rem; color:var(--ink-soft);}
+  .problem h2{font-size:2.1rem; margin-bottom:18px; font-weight:700; letter-spacing:-0.01em;}
+  .problem p.body-text{color:var(--ink-soft); margin-bottom:20px; font-size:1.02rem;}
+
+  /* ---------- FEATURES ---------- */
+  .feature-grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;}
+  .feature-card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:28px; box-shadow:var(--shadow); transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .feature-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg);}
+  .feature-icon{
+    width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+  }
+  .feature-card h3{font-size:1.08rem; margin-bottom:8px; font-weight:600;}
+  .feature-card p{font-size:0.9rem; color:var(--ink-soft);}
+  .feature-card.spotlight{
+    grid-column:span 2; background:linear-gradient(135deg, #1E3A8A, #2563EB 60%, #10B981 130%);
+    color:#fff; display:flex; flex-direction:column; justify-content:space-between;
+  }
+  .feature-card.spotlight h3{color:#fff; font-size:1.3rem;}
+  .feature-card.spotlight p{color:rgba(255,255,255,0.85);}
+  .feature-card.spotlight .feature-icon{background:rgba(255,255,255,0.18);}
+  .chat-bubble{
+    background:rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25);
+    border-radius:12px; padding:10px 14px; font-size:0.85rem; margin-top:14px; display:inline-block;
+  }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .flow{background:var(--card); border-top:1px solid var(--border); border-bottom:1px solid var(--border);}
+  .flow-track{display:flex; align-items:flex-start; justify-content:space-between; position:relative; margin-top:20px;}
+  .flow-track::before{
+    content:""; position:absolute; top:23px; left:5%; right:5%; height:2px;
+    background:repeating-linear-gradient(to right, var(--border) 0 8px, transparent 8px 16px);
+    z-index:0;
+  }
+  .flow-step{display:flex; flex-direction:column; align-items:center; text-align:center; width:16%; position:relative; z-index:1;}
+  .flow-num{
+    width:46px; height:46px; border-radius:50%; background:var(--bg); border:2px solid var(--blue); color:var(--blue-dark);
+    display:flex; align-items:center; justify-content:center; font-family:'Poppins'; font-weight:700; margin-bottom:14px;
+  }
+  .flow-step:last-child .flow-num{background:var(--blue); color:#fff;}
+  .flow-step p{font-size:0.85rem; font-weight:600;}
+  .flow-step span{font-size:0.76rem; color:var(--ink-soft);}
+
+  /* ---------- METRICS ---------- */
+  .metrics-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+  .metric-card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:26px; box-shadow:var(--shadow);}
+  .metric-card .num{font-family:'Poppins'; font-weight:700; font-size:2rem; color:var(--blue-dark);}
+  .metric-card .label{font-size:0.85rem; color:var(--ink-soft); margin-top:6px;}
+
+  /* ---------- CTA ---------- */
+  .cta{
+    background:linear-gradient(135deg, #17245C, #2563EB 60%, #0D9668);
+    border-radius:28px; padding:64px 48px; text-align:center; color:#fff; position:relative; overflow:hidden;
+  }
+  .cta::before{
+    content:""; position:absolute; width:420px; height:420px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,0.14), transparent 70%);
+    top:-160px; right:-120px;
+  }
+  .cta h2{font-size:2.1rem; margin-bottom:14px; font-weight:700; position:relative;}
+  .cta p{color:rgba(255,255,255,0.85); max-width:480px; margin:0 auto 30px; position:relative;}
+  .cta .btn-primary{background:#fff; color:var(--blue-dark); box-shadow:none;}
+  .cta .btn-primary:hover{background:#F1F5F9;}
+  .cta-actions{position:relative; display:flex; gap:16px; justify-content:center;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:48px 0 40px; border-top:1px solid var(--border);}
+  .foot-grid{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px;}
+  .foot-links{display:flex; gap:26px; font-size:0.88rem; color:var(--ink-soft);}
+  .foot-links a:hover{color:var(--blue);}
+  .foot-copy{font-size:0.82rem; color:var(--ink-soft);}
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:920px){
+    .nav-links{display:none;}
+    .menu-toggle{display:block;}
+    .hero-grid{grid-template-columns:1fr; gap:48px;}
+    .hero h1{font-size:2.5rem;}
+    .problem-grid{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:repeat(2,1fr);}
+    .feature-card.spotlight{grid-column:span 2;}
+    .metrics-grid{grid-template-columns:repeat(2,1fr);}
+    .flow-track{flex-wrap:wrap; gap:24px;}
+    .flow-track::before{display:none;}
+    .flow-step{width:44%;}
+  }
+  @media (max-width:600px){
+    .hero{padding:56px 0 40px;}
+    .hero h1{font-size:2.05rem;}
+    section{padding:64px 0;}
+    .feature-grid{grid-template-columns:1fr;}
+    .feature-card.spotlight{grid-column:span 1;}
+    .metrics-grid{grid-template-columns:1fr 1fr;}
+    .cta{padding:44px 26px;}
+    .mock-card{transform:none;}
+    .float-chip{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo"><span class="logo-mark"></span>StudyFlow</a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#proof">Why it works</a>
+    </div>
+    <div class="nav-cta">
+      <a href="#" class="btn btn-ghost" style="display:none" id="loginLink">Log in</a>
+      <a href="#join" class="btn btn-primary">Join the beta</a>
+    </div>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow"><span class="eyebrow-dot"></span>Built for secondary school exam season</span>
+      <h1>Rereading feels productive.<br><em>Recall</em> actually works.</h1>
+      <p class="lead">StudyFlow puts your timetable, revision plan, notes, and an AI study coach in one place — so you stop juggling apps and start remembering what you learn.</p>
+      <div class="hero-actions">
+        <a href="#join" class="btn btn-primary">Join the beta — it's free</a>
+        <a href="#how" class="btn btn-ghost">See how it works ↓</a>
+      </div>
+      <div class="trust-row">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>No credit card</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round"><path d="M20 6L9 17l-5-5"/></svg>Set up in 5 minutes</span>
+      </div>
+    </div>
+
+    <div class="mock-wrap">
+      <div class="mock-card">
+        <div class="mock-topbar">
+          <span class="mock-greet">Good afternoon 👋</span>
+          <span class="mock-avatar"></span>
+        </div>
+        <div class="mock-alert">
+          <span class="dot"></span>
+          <div><strong>Maths test in 4 days</strong><span>Algebra makes up 40% of the paper</span></div>
+        </div>
+        <div class="mock-suggest">
+          <span class="tag">AI recommendation</span>
+          <div class="task">Review Algebra for 25 minutes today</div>
+          <div class="mock-progress-track"><div class="mock-progress-fill"></div></div>
+          <div class="mock-progress-label"><span>Week 2 of revision plan</span><span>62%</span></div>
+        </div>
+        <div class="mock-tasks">
+          <div class="mock-task strike"><span class="box done"></span> Finish English essay</div>
+          <div class="mock-task"><span class="box"></span> Review Chemistry Ch. 5</div>
+          <div class="mock-task"><span class="box"></span> Complete Maths worksheet</div>
+        </div>
+      </div>
+      <div class="float-chip streak"><span class="flame"></span>12-day streak</div>
+      <div class="float-chip quiz">✦ Quiz me on algebra</div>
+    </div>
+  </div>
+</section>
+
+<section class="problem">
+  <div class="wrap problem-grid">
+    <div class="reveal">
+      <h2>You're not bad at studying. Your methods are working against you.</h2>
+      <p class="body-text">Highlighting and rereading feel like progress, but they build familiarity, not memory. Active recall and spaced repetition are proven to work better — StudyFlow builds them into every session automatically, and keeps your timetable, notes, and deadlines from living in five different apps.</p>
+      <a href="#features" class="btn btn-primary">See what's inside</a>
+    </div>
+    <div class="compare reveal">
+      <div class="compare-row bad">
+        <span class="compare-icon">✕</span>
+        <div><p>Rereading notes the night before</p><span>Feels familiar, forgotten within days</span></div>
+      </div>
+      <div class="compare-row bad">
+        <span class="compare-icon">✕</span>
+        <div><p>Calendar, notes, and to-dos in separate apps</p><span>Nothing talks to anything else</span></div>
+      </div>
+      <div class="compare-row good">
+        <span class="compare-icon">✓</span>
+        <div><p>AI-generated quizzes from your own notes</p><span>Forces retrieval, not recognition</span></div>
+      </div>
+      <div class="compare-row good">
+        <span class="compare-icon">✓</span>
+        <div><p>Revision spaced automatically before exams</p><span>One plan, built from your real timetable</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>What's inside</span>
+      <h2>Everything a study session needs, nothing it doesn't</h2>
+      <p>Eight tools that share one plan, so studying stops being scattered.</p>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card spotlight reveal">
+        <div>
+          <div class="feature-icon">✦</div>
+          <h3>AI Study Assistant</h3>
+          <p>Ask it to explain a concept, quiz you, or turn notes into flashcards — it guides you to the answer instead of just handing it over.</p>
+        </div>
+        <div class="chat-bubble">"Quiz me on algebra" → 5 questions generated from your notes</div>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#EAF2FF; color:var(--blue-dark);">📅</div>
+        <h3>Smart Timetable</h3>
+        <p>Your classes, colour-coded, with reminders before each one and homework linked to the right subject.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#ECFDF5; color:var(--green);">✔</div>
+        <h3>To-do List</h3>
+        <p>Homework, revision, and projects with priority labels and due dates — nothing falls through the cracks.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#FEF3E2; color:var(--amber);">🗂</div>
+        <h3>Notes</h3>
+        <p>Subject folders, rich text, diagrams, and search — written once, reused by the AI to build quizzes and flashcards.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#EAF2FF; color:var(--blue-dark);">⏱</div>
+        <h3>Study Sessions</h3>
+        <p>Pomodoro timer with focus mode and session history, so you can see where your hours actually go.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="background:#ECFDF5; color:var(--green);">🗺</div>
+        <h3>Revision Planner</h3>
+        <p>Give it an exam date — it spaces your weak topics across the weeks before, automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow" id="how">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>How it works</span>
+      <h2>One loop, repeated daily</h2>
+      <p>The same six steps, every day, until they're a habit.</p>
+    </div>
+    <div class="flow-track reveal">
+      <div class="flow-step"><div class="flow-num">1</div><p>Open dashboard</p><span>See today at a glance</span></div>
+      <div class="flow-step"><div class="flow-num">2</div><p>Check today's tasks</p><span>Homework + revision</span></div>
+      <div class="flow-step"><div class="flow-num">3</div><p>Start a session</p><span>Pick subject + timer</span></div>
+      <div class="flow-step"><div class="flow-num">4</div><p>AI quizzes you</p><span>Active recall, not rereading</span></div>
+      <div class="flow-step"><div class="flow-num">5</div><p>Complete the task</p><span>Marked off automatically</span></div>
+      <div class="flow-step"><div class="flow-num">6</div><p>Progress updates</p><span>Next session suggested</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="eyebrow-dot"></span>What we're building toward</span>
+      <h2>Designed around four numbers</h2>
+      <p>These are the habits StudyFlow's MVP is built to create — not vanity metrics.</p>
+    </div>
+    <div class="metrics-grid reveal">
+      <div class="metric-card"><div class="num">4+</div><div class="label">Days logged in per week</div></div>
+      <div class="metric-card"><div class="num">1</div><div class="label">Study session completed daily</div></div>
+      <div class="metric-card"><div class="num">1</div><div class="label">Weekly revision plan created</div></div>
+      <div class="metric-card"><div class="num">↻</div><div class="label">Returns to review past material</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="join">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Cramming isn't a study plan.</h2>
+      <p>Join the beta and get your revision plan, timetable, and AI study coach in one place before next exam season.</p>
+      <div class="cta-actions">
+        <a href="#" class="btn btn-primary">Join the beta — it's free</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-grid">
+    <a href="#" class="logo" style="font-size:1rem;"><span class="logo-mark" style="width:26px;height:26px;"></span>StudyFlow</a>
+    <div class="foot-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#join">Join beta</a>
+    </div>
+    <div class="foot-copy">StudyFlow AI — concept preview, working title.</div>
+  </div>
+</footer>
+
+<script>
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.15});
+  els.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
